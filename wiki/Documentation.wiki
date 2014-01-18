@@ -9,13 +9,14 @@
   * Type-safe access to configuration key/value pairs
   * Check for mandatory property values
   * Automatic substitution (resolve) of expressions of the form ${my.key} inside config values
-  * Subset features
+  * Configuration subsets
+  * Lightweight: Just a 10k jar with no additional dependencies
 
 =Requisites=
 
   * Java 1.6+
 
-Maven users just need to add the following dependency, it will download the required libraries automatically:
+Maven users just need to add the following dependency:
 
 {{{
   <dependency>
