@@ -6,10 +6,9 @@
 
 =Features=
 
-  * Type-safe access to configuration key/value pairs
-  * Check for mandatory property values
+  * Checked and type-safe access to configuration key/value pairs
   * Automatic substitution (resolve) of expressions of the form ${my.key} inside config values
-  * Configuration subsets
+  * Subsets and merge possible
   * Lightweight: Just a 10k jar with no additional dependencies
 
 =Requisites=
