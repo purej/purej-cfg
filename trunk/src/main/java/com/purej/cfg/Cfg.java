@@ -69,7 +69,7 @@ public class Cfg {
    * @return the passed value
    * @throws CfgException if the given value is smaller then the specified min-value.
    */
-  public static <T extends Comparable<T>> T checkMin(T value, T minValue) {
+  public static <T extends Comparable<T>> T checkMin(T value, T minValue) throws CfgException {
     if (value != null && minValue.compareTo(value) > 0) {
       throw new CfgException("Value '" + value + "' is smaller then allowed min-value '" + minValue + "'");
     }
@@ -84,7 +84,7 @@ public class Cfg {
    * @return the passed value
    * @throws CfgException if the given value is bigger then the specified max-value.
    */
-  public static <T extends Comparable<T>> T checkMax(T value, T maxValue) {
+  public static <T extends Comparable<T>> T checkMax(T value, T maxValue) throws CfgException {
     if (value != null && maxValue.compareTo(value) < 0) {
       throw new CfgException("Value '" + value + "' is bigger then allowed max-value '" + maxValue + "'");
     }
@@ -100,7 +100,7 @@ public class Cfg {
    * @return the passed value
    * @throws CfgException if the given value is smaller or bigger then the specified min/max-values.
    */
-  public static <T extends Comparable<T>> T checkMinMax(T value, T minValue, T maxValue) {
+  public static <T extends Comparable<T>> T checkMinMax(T value, T minValue, T maxValue) throws CfgException {
     return checkMax(checkMin(value, minValue), maxValue);
   }
 
@@ -193,7 +193,7 @@ public class Cfg {
    * @return true if the configured value is equal, ignoring case, to the string {@code "true"} - false otherwise
    * @throws CfgException if no value for the given key exists
    */
-  public boolean getBoolean(String key) {
+  public boolean getBoolean(String key) throws CfgException {
     return checkNotNull(key, getBoolean(key, null)).booleanValue();
   }
 
@@ -205,7 +205,7 @@ public class Cfg {
    * @param defaultValue the default value in case of a missing a config value
    * @return the configured value or the specified default value
    */
-  public Boolean getBoolean(String key, Boolean defaultValue) {
+  public Boolean getBoolean(String key, Boolean defaultValue) throws CfgException {
     String value = getString(key, null);
     return value != null ? Boolean.valueOf(value) : defaultValue;
   }
@@ -218,7 +218,7 @@ public class Cfg {
    * @return the configured int value
    * @throws CfgException if no value for the given key exists or the value could not be converted to an int
    */
-  public int getInt(String key) {
+  public int getInt(String key) throws CfgException {
     return checkNotNull(key, getInt(key, null)).intValue();
   }
 
@@ -231,7 +231,7 @@ public class Cfg {
    * @return the configured value or the specified default value
    * @throws CfgException if the value could not be converted to an {@link Integer}
    */
-  public Integer getInt(String key, Integer defaultValue) {
+  public Integer getInt(String key, Integer defaultValue) throws CfgException {
     String value = getString(key, null);
     try {
       return value != null ? Integer.valueOf(value) : defaultValue;
@@ -249,7 +249,7 @@ public class Cfg {
    * @return the configured long value
    * @throws CfgException if no value for the given key exists or the value could not be converted to a long
    */
-  public long getLong(String key) {
+  public long getLong(String key) throws CfgException {
     return checkNotNull(key, getLong(key, null)).longValue();
   }
 
@@ -262,7 +262,7 @@ public class Cfg {
    * @return the configured value or the specified default value
    * @throws CfgException if the value could not be converted to a {@link Long}
    */
-  public Long getLong(String key, Long defaultValue) {
+  public Long getLong(String key, Long defaultValue) throws CfgException {
     String value = getString(key, null);
     try {
       return value != null ? Long.valueOf(value) : defaultValue;
@@ -280,7 +280,7 @@ public class Cfg {
    * @return the configured value, never null
    * @throws CfgException if no value for the given key exists or the value could not be converted to a {@link BigDecimal}
    */
-  public BigDecimal getBigDecimal(String key) {
+  public BigDecimal getBigDecimal(String key) throws CfgException {
     return checkNotNull(key, getBigDecimal(key, null));
   }
 
@@ -293,7 +293,7 @@ public class Cfg {
    * @return the configured value or the specified default value
    * @throws CfgException if the value could not be converted to a {@link BigDecimal}
    */
-  public BigDecimal getBigDecimal(String key, BigDecimal defaultValue) {
+  public BigDecimal getBigDecimal(String key, BigDecimal defaultValue) throws CfgException {
     String value = getString(key, null);
     try {
       return value != null ? new BigDecimal(value) : defaultValue;
