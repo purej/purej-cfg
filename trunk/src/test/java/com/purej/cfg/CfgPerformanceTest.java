@@ -10,10 +10,13 @@ import org.junit.Test;
  */
 public class CfgPerformanceTest {
 
+  /**
+   * Tests the named functionality.
+   */
   @Test
   public void testGetPerformance() throws Exception {
     File file = new File("src/test/resources/perf-test.properties");
-    
+
     // Two calls before measure:
     Cfg cfg = CfgAccess.load(file);
     cfg = CfgAccess.load(file);

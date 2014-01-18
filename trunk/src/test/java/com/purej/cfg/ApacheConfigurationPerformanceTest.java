@@ -12,6 +12,9 @@ import org.junit.Test;
  */
 public class ApacheConfigurationPerformanceTest {
 
+  /**
+   * Tests the named functionality.
+   */
   @Test
   public void testGetPerformance() throws Exception {
     File file = new File("src/test/resources/perf-test.properties");
