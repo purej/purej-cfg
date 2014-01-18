@@ -1,6 +1,6 @@
 <p align="center">
 *<font size="20">PureJ Cfg</font><br/>
-[https://code.google.com/p/purej-cfg/ Home] | [Documentation] | [ReleaseNotes] | [Downloads]*
+[https://code.google.com/p/purej-cfg/ Home] | [ReleaseNotes] | [Downloads]*
 </p>
 
 
