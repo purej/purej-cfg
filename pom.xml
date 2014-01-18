@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.purej</groupId>
+    <artifactId>purej-parent</artifactId>
+    <version>1.2</version>
+  </parent>
+
+  <artifactId>purej-cfg</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>PureJ Cfg</name>
+  <description>A small library that allows easy and type-safe access to configuration properties</description>
+
+  <properties>
+    <jdkVersion>1.6</jdkVersion>
+  </properties>
+
+  <scm>
+    <connection>scm:svn:http://purej-cfg.googlecode.com/svn/trunk</connection>
+    <url>http://purej-cfg.googlecode.com/svn/trunk</url>
+  </scm>
+
+  <dependencies>
+
+    <!-- Unit-testing dependencies -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.8.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>commons-configuration</groupId>
+      <artifactId>commons-configuration</artifactId>
+      <version>1.10</version>
+      <scope>test</scope>
+    </dependency>
+
+  </dependencies>
+
+</project>
