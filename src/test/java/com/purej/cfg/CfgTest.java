@@ -15,6 +15,9 @@ import org.junit.Test;
  */
 public class CfgTest {
 
+  /**
+   * Tests the named functionality.
+   */
   @Test
   public void testBasics() throws Exception {
     Cfg cfg = new Cfg();
@@ -56,6 +59,9 @@ public class CfgTest {
     Assert.assertEquals("myDefault", cfg.subset("blub").getString("y", "myDefault"));
   }
 
+  /**
+   * Tests the named functionality.
+   */
   @Test
   public void testSubstitution() throws Exception {
     // Test some direct substitutions:
@@ -116,6 +122,9 @@ public class CfgTest {
     Assert.assertEquals(resolvedValue, cfg.subset("my.key").getString("2"));
   }
 
+  /**
+   * Tests the named functionality.
+   */
   @Test
   public void testMerge() throws Exception {
     Cfg cfg = new Cfg();
@@ -130,6 +139,9 @@ public class CfgTest {
     Assert.assertEquals("X3", cfg.getString("my.key.3"));
   }
 
+  /**
+   * Tests the named functionality.
+   */
   @Test
   public void testGetTypeValuesRoot() throws Exception {
     Cfg cfg = new Cfg();
@@ -145,6 +157,9 @@ public class CfgTest {
     doTestGetTypeValues(cfg);
   }
 
+  /**
+   * Tests the named functionality.
+   */
   @Test
   public void testGetTypeValuesSubset() throws Exception {
     Cfg cfg = new Cfg();
@@ -242,6 +257,9 @@ public class CfgTest {
     }
   }
 
+  /**
+   * Tests the named functionality.
+   */
   @Test
   public void testErrors() throws Exception {
     try {
@@ -253,6 +271,9 @@ public class CfgTest {
     }
   }
 
+  /**
+   * Tests the named functionality.
+   */
   @Test
   public void testRangeCheck() throws Exception {
     // Test min:

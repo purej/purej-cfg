@@ -13,6 +13,9 @@ import org.junit.Test;
  */
 public class CfgAccessTest {
 
+  /**
+   * Tests the named functionality.
+   */
   @Test
   public void testLoadFromFile() throws Exception {
     Cfg cfg = CfgAccess.load(new File("src/test/resources/test-01.properties"));
@@ -27,6 +30,9 @@ public class CfgAccessTest {
     }
   }
 
+  /**
+   * Tests the named functionality.
+   */
   @Test
   public void testLoadFromStream() throws Exception {
     Cfg cfg = CfgAccess.load(CfgAccessTest.class.getResourceAsStream("/test-01.properties"));
@@ -36,6 +42,9 @@ public class CfgAccessTest {
     Assert.assertEquals("value-03", cfg.getString("mykey"));
   }
 
+  /**
+   * Tests the named functionality.
+   */
   @Test
   public void testLoadFromResource() throws Exception {
     Cfg cfg = CfgAccess.load("/test-01.properties");
@@ -56,6 +65,9 @@ public class CfgAccessTest {
     }
   }
 
+  /**
+   * Tests the named functionality.
+   */
   @Test
   public void testStore() throws Exception {
     // Create cfg & store:
