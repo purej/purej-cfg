@@ -1,3 +1,4 @@
+// Copyright (c), 2009, adopus consulting GmbH Switzerland, all rights reserved.
 package com.purej.cfg;
 
 import java.io.File;
