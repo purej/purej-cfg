@@ -18,13 +18,13 @@ public class CfgPerformanceTest {
     File file = new File("src/test/resources/perf-test.properties");
 
     // Two calls before measure:
-    Cfg cfg = CfgAccess.load(file);
-    cfg = CfgAccess.load(file);
+    Cfg cfg = new Cfg(file);
+    cfg = new Cfg(file);
 
     int runs = 10000;
     long tick = System.nanoTime();
     for (int i = 0; i < runs; i++) {
-      cfg = CfgAccess.load(file);
+      cfg = new Cfg(file);
     }
     double nanos = System.nanoTime() - tick;
     System.out.println("Cfg - Time per load: " + (nanos / runs) + "nanos");

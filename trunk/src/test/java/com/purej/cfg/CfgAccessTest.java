@@ -18,12 +18,13 @@ public class CfgAccessTest {
    */
   @Test
   public void testLoadFromFile() throws Exception {
-    Cfg cfg = CfgAccess.load(new File("src/test/resources/test-01.properties"));
+    Cfg cfg = new Cfg(new File("src/test/resources/test-01.properties"));
     Assert.assertEquals("value-01", cfg.getString("mykey"));
 
     // Load not existing:
     try {
-      CfgAccess.load(new File("src/test/resources/xxx"));
+      cfg = new Cfg(new File("src/test/resources/xxx"));
+      Assert.fail();
     }
     catch (IOException e) {
       System.out.println("Expected exception: " + e.toString());
@@ -35,10 +36,10 @@ public class CfgAccessTest {
    */
   @Test
   public void testLoadFromStream() throws Exception {
-    Cfg cfg = CfgAccess.load(CfgAccessTest.class.getResourceAsStream("/test-01.properties"));
+    Cfg cfg = new Cfg(CfgAccessTest.class.getResourceAsStream("/test-01.properties"));
     Assert.assertEquals("value-01", cfg.getString("mykey"));
 
-    cfg = CfgAccess.load(CfgAccessTest.class.getResourceAsStream("test-03.properties"));
+    cfg = new Cfg(CfgAccessTest.class.getResourceAsStream("test-03.properties"));
     Assert.assertEquals("value-03", cfg.getString("mykey"));
   }
 
@@ -47,18 +48,19 @@ public class CfgAccessTest {
    */
   @Test
   public void testLoadFromResource() throws Exception {
-    Cfg cfg = CfgAccess.load("/test-01.properties");
+    Cfg cfg = new Cfg("/test-01.properties");
     Assert.assertEquals("value-01", cfg.getString("mykey"));
 
-    cfg = CfgAccess.load("src/test/resources/test-02.properties");
+    cfg = new Cfg("src/test/resources/test-02.properties");
     Assert.assertEquals("value-02", cfg.getString("mykey"));
 
-    cfg = CfgAccess.load("test-03.properties");
+    cfg = new Cfg("test-03.properties");
     Assert.assertEquals("value-03", cfg.getString("mykey"));
 
     // Load not existing:
     try {
-      CfgAccess.load("src/test/resources/xxx");
+      cfg = new Cfg("src/test/resources/xxx");
+      Assert.fail();
     }
     catch (IOException e) {
       System.out.println("Expected exception: " + e.toString());
@@ -77,10 +79,10 @@ public class CfgAccessTest {
     cfg.put("k3", "");
     cfg.put("k4", "     ");
     cfg.put("k5", "xxx  ");
-    CfgAccess.store(cfg, new File("target/tmp/tmp.properties"));
+    cfg.store(new File("target/tmp/tmp.properties"));
 
     // Read again:
-    cfg = CfgAccess.load("target/tmp/tmp.properties");
+    cfg = new Cfg("target/tmp/tmp.properties");
     Assert.assertEquals(5, cfg.getKeys().size());
     Assert.assertEquals(12, cfg.getInt("k1"));
     Assert.assertEquals(true, cfg.getBoolean("k2"));
