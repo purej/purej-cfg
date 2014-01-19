@@ -27,7 +27,7 @@ public class CfgPerformanceTest {
       cfg = CfgAccess.load(file);
     }
     double nanos = System.nanoTime() - tick;
-    System.out.println("Apache - Time per load: " + (nanos / runs) + "nanos");
+    System.out.println("Cfg - Time per load: " + (nanos / runs) + "nanos");
 
     // Two calls before measure:
     doTestGetPerformance(cfg);
