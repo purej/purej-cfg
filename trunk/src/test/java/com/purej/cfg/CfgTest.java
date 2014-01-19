@@ -154,7 +154,11 @@ public class CfgTest {
     cfg.put("long-value", 12345678901L);
     cfg.put("decimal-value", new BigDecimal("1234.5678"));
     cfg.put("timeunit-value", TimeUnit.HOURS);
+
+    // Test all type:
     doTestGetTypeValues(cfg);
+    // Test again with a clone:
+    doTestGetTypeValues(new Cfg(cfg.toMap()));
   }
 
   /**
@@ -172,7 +176,12 @@ public class CfgTest {
     cfg.put("my.sub.long-value", "12345678901");
     cfg.put("my.sub.decimal-value", "1234.5678");
     cfg.put("my.sub.timeunit-value", "HOURS");
-    doTestGetTypeValues(cfg.subset("my.sub"));
+    cfg = cfg.subset("my.sub");
+
+    // Test all type:
+    doTestGetTypeValues(cfg);
+    // Test again with a clone:
+    doTestGetTypeValues(new Cfg(cfg.toMap()));
   }
 
   private static void doTestGetTypeValues(Cfg c) throws Exception {
