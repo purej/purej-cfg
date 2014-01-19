@@ -4,5 +4,5 @@
 </p>
 
 
-===1.0 - (xxx)===
+===1.0 - (19.1.2014)===
   * Moved to code.google.com and Maven Central, added licensing
