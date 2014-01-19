@@ -1,13 +1,21 @@
 // Copyright (c), 2009, adopus consulting GmbH Switzerland, all rights reserved.
 package com.purej.cfg;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 /**
@@ -59,6 +67,87 @@ public class Cfg {
       }
       _map.put(e.getKey().toString(), e.getValue() != null ? e.getValue().toString() : null);
     }
+  }
+
+  /**
+   * Creates a new instance of this class that loads the config key/value pairs from the
+   * given resource or file which must be in a flat java properties-file format.
+   * See the {@link Properties} javadoc for more details.
+   *
+   * @param resourceOrFile the java properties resource or file
+   * @throws IOException if the file or resource could not be found or an I/O error occurred
+   */
+  public Cfg(String resourceOrFile) throws IOException {
+    this(load(resourceOrFile));
+  }
+
+  /**
+   * Creates a new instance of this class that loads the config key/value pairs from the
+   * given file which must be in a flat java properties-file format.
+   * See the {@link Properties} javadoc for more details.
+   *
+   * @param file the java properties file
+   * @throws IOException if the file could not be found or an I/O error occurred
+   */
+  public Cfg(File file) throws IOException {
+    this(load(file));
+  }
+
+  /**
+   * Creates a new instance of this class that loads the config key/value pairs from the
+   * given stream which must be in a flat java properties-file format.
+   * See the {@link Properties} javadoc for more details.
+   *
+   * @param stream the input stream to load from, will remain open after this method returns
+   * @throws IOException if the file could not be found or an I/O error occurred
+   */
+  public Cfg(InputStream stream) throws IOException {
+    this(load(stream));
+  }
+
+  private static Properties load(String resourceOrFile) throws IOException {
+    InputStream stream = createInputStream(resourceOrFile);
+    try {
+      return load(stream);
+    }
+    finally {
+      stream.close();
+    }
+  }
+
+  private static Properties load(File file) throws IOException {
+    InputStream stream = new FileInputStream(file);
+    try {
+      return load(stream);
+    }
+    finally {
+      stream.close();
+    }
+  }
+
+  private static Properties load(InputStream stream) throws IOException {
+    Properties properties = new Properties();
+    properties.load(stream);
+    return properties;
+  }
+
+  private static InputStream createInputStream(String properties) throws IOException {
+    // Try to get it as resource from the context class loader (most specific class loader):
+    InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(properties);
+    if (stream != null) {
+      return stream;
+    }
+    // If not found, try to load over this class's class loader:
+    stream = Cfg.class.getResourceAsStream(properties);
+    if (stream != null) {
+      return stream;
+    }
+    // Try to load it as file:
+    File file = new File(properties);
+    if (!file.exists()) {
+      throw new IOException("The file or resource '" + properties + "' does not exist!");
+    }
+    return new FileInputStream(file);
   }
 
   /**
@@ -182,6 +271,7 @@ public class Cfg {
    * Returns a newly created map with all key/value pairs of this config instance.
    */
   public Map<String, String> toMap() {
+    // TODO subset!!!
     return new HashMap<String, String>(_map);
   }
 
@@ -426,6 +516,30 @@ public class Cfg {
    */
   public void remove(String key) {
     _map.remove(toKey(key));
+  }
+
+  /**
+   * Stores this config's key/values pairs to the given file in flat java properties format.
+   * The file will be overwritten if it already exists.
+   *
+   * @param file the file to be written to
+   * @throws IOException if the file could not be written
+   */
+  public void store(File file) throws IOException {
+    if (!file.getParentFile().exists()) {
+      file.getParentFile().mkdirs();
+    }
+    Properties properties = new Properties();
+    for (Map.Entry<String, String> entry : toMap().entrySet()) {
+      properties.put(entry.getKey(), entry.getValue() == null ? "" : entry.getValue());
+    }
+    OutputStream stream = new FileOutputStream(file);
+    try {
+      properties.store(stream, "Saved at " + new Date());
+    }
+    finally {
+      stream.close();
+    }
   }
 
   @Override
