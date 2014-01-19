@@ -220,6 +220,7 @@ public class Cfg {
 
   /**
    * Returns the list of keys of this config instance.
+   * If this config instance is a subset, only the keys of the subset are returned.
    */
   public Set<String> getKeys() {
     if (_subsetPrefix == null) {
@@ -269,10 +270,21 @@ public class Cfg {
 
   /**
    * Returns a newly created map with all key/value pairs of this config instance.
+   * If this config instance is a subset, only the entries of the subset are returned.
+   * <p/>
+   * Note: Values will NOT be resolved (eg. no substitutions).
    */
   public Map<String, String> toMap() {
-    // TODO subset!!!
-    return new HashMap<String, String>(_map);
+    if (_subsetPrefix == null) {
+      return new HashMap<String, String>(_map);
+    }
+    Map<String, String> result = new HashMap<String, String>();
+    for (Map.Entry<String, String> entry : _map.entrySet()) {
+      if (entry.getKey().startsWith(_subsetPrefix)) {
+        result.put(entry.getKey().substring(_subsetPrefix.length()), entry.getValue());
+      }
+    }
+    return result;
   }
 
   /**
@@ -521,6 +533,7 @@ public class Cfg {
   /**
    * Stores this config's key/values pairs to the given file in flat java properties format.
    * The file will be overwritten if it already exists.
+   * If this config instance is a subset, only the entries of the subset are returned.
    *
    * @param file the file to be written to
    * @throws IOException if the file could not be written
