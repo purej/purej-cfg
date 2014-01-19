@@ -88,4 +88,22 @@ public class CfgAccessTest {
     Assert.assertEquals("     ", cfg.getString("k4"));
     Assert.assertEquals("xxx  ", cfg.getString("k5"));
   }
+
+  /**
+   * Tests the named functionality.
+   */
+  @Test
+  public void testLoadEnv() throws Exception {
+    Cfg cfg = new Cfg(System.getenv());
+    System.out.println("Cfg loaded from env: " + cfg);
+  }
+
+  /**
+   * Tests the named functionality.
+   */
+  @Test
+  public void testLoadSystemProperties() throws Exception {
+    Cfg cfg = new Cfg(System.getProperties());
+    System.out.println("Cfg loaded from sys-properties: " + cfg);
+  }
 }
