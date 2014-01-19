@@ -10,7 +10,7 @@
   </parent>
 
   <artifactId>purej-cfg</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
   <packaging>jar</packaging>
 
   <name>PureJ Cfg</name>
@@ -21,8 +21,8 @@
   </properties>
 
   <scm>
-    <connection>scm:svn:http://purej-cfg.googlecode.com/svn/trunk</connection>
-    <url>http://purej-cfg.googlecode.com/svn/trunk</url>
+    <connection>scm:svn:http://purej-cfg.googlecode.com/tags/purej-cfg-1.0</connection>
+    <url>http://purej-cfg.googlecode.com/svn/tags/purej-cfg-1.0</url>
   </scm>
 
   <dependencies>
