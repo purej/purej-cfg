@@ -11,7 +11,7 @@ import org.junit.Test;
  *
  * @author Stefan Mueller
  */
-public class CfgAccessTest {
+public class CfgLoadStoreTest {
 
   /**
    * Tests the named functionality.
@@ -36,10 +36,10 @@ public class CfgAccessTest {
    */
   @Test
   public void testLoadFromStream() throws Exception {
-    Cfg cfg = new Cfg(CfgAccessTest.class.getResourceAsStream("/test-01.properties"));
+    Cfg cfg = new Cfg(CfgLoadStoreTest.class.getResourceAsStream("/test-01.properties"));
     Assert.assertEquals("value-01", cfg.getString("mykey"));
 
-    cfg = new Cfg(CfgAccessTest.class.getResourceAsStream("test-03.properties"));
+    cfg = new Cfg(CfgLoadStoreTest.class.getResourceAsStream("test-03.properties"));
     Assert.assertEquals("value-03", cfg.getString("mykey"));
   }
 
