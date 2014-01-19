@@ -533,7 +533,7 @@ public class Cfg {
   /**
    * Stores this config's key/values pairs to the given file in flat java properties format.
    * The file will be overwritten if it already exists.
-   * If this config instance is a subset, only the entries of the subset are returned.
+   * If this config instance is a subset, only the entries of the subset are stored.
    *
    * @param file the file to be written to
    * @throws IOException if the file could not be written
