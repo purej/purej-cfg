@@ -4,4 +4,22 @@
 </p>
 
 
-TODO
+Maven users just need to add the following dependency, it will download the required libraries automatically:
+{{{
+  <dependency>
+    <groupId>com.purej</groupId>
+    <artifactId>purej-cfg</artifactId>
+    <version>1.0</version>
+  </dependency>
+}}}
+
+
+==Newest stable version==
+
+*Version 1.0 (19.01.2014)*
+|| *File* || *Size* || *Summary* ||
+||[https://purej-cfg.googlecode.com/svn/wiki/downloads/1.0/purej-cfg-1.0.jar purej-cfg-1.0.jar]||9kb||Binary||
+||[https://purej-cfg.googlecode.com/svn/wiki/downloads/1.0/purej-cfg-1.0-sources.jar purej-cfg-1.0-sources.jar]||6kb||Sources||
+||[https://purej-cfg.googlecode.com/svn/wiki/downloads/1.0/purej-cfg-1.0-javadoc.jar purej-cfg-1.0-javadoc.jar]||50kb||Javadoc||
+
+==Old stable Versions==
