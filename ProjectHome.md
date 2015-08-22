@@ -1,0 +1,73 @@
+<p align='center'>
+<font size='20'>PureJ Cfg</font><br />
+<a href='https://code.google.com/p/purej-cfg/'>Home</a> | <a href='ReleaseNotes.md'>ReleaseNotes</a> | <a href='Downloads.md'>Downloads</a> | <a href='License.md'>License</a>**</p>**
+
+## Features ##
+
+  * Checked and type-safe access to configuration key/value pairs
+  * Automatic substitution (resolve) of expressions of the form ${my.key} inside config values
+  * Convenience functionality: Subsets, merge, range-checks
+
+In contrary to the _Apache Commons Configuration_ library which aims for the same goals, this library is extremly small (just 9k), has much better performance (see below) and does not require additional dependencies.
+
+## Requisites ##
+
+  * Java 1.6+
+Maven users just need to add the following dependency:
+
+```
+  <dependency>
+    <groupId>com.purej</groupId>
+    <artifactId>purej-cfg</artifactId>
+    <version>1.0</version>
+  </dependency>
+```
+
+## Usage ##
+
+Create a _Cfg_ instance from various sources:
+```
+  Cfg cfg = new Cfg(); // New empty config
+  Cfg cfg = new Cfg("myCfg.properties"); // Load from java properties resource or file
+  Cfg cfg = new Cfg(System.getenv()); // Load from system environment
+```
+
+Access type-safe **mandatory** config values (throws a _CfgException_ if a key or value is missing or if conversion failed):
+```
+  boolean myBool = cfg.getBoolean("my.mandatory.boolean.key");
+  int myInt = cfg.getInt("my.mandatory.int.key");
+  String myString = cfg.getString("my.mandatory.string.key");
+  TimeUnit myEnum = cfg.getEnum("my.mandatory.enum.key", TimeUnit.class);
+```
+
+Access type-safe **optional** config values by providing a default for missing keys/values:
+```
+  boolean myBool = cfg.getBoolean("my.optional.boolean.key", Boolean.TRUE);
+  int myInt = cfg.getInt("my.optional.int.key", 42);
+  String myString = cfg.getString("my.optional.string.key", null);
+  TimeUnit myEnum = cfg.getEnum("my.optional.enum.key", TimeUnit.class, TimeUnit.DAY);
+```
+
+Change some config values and store to a properties file:
+```
+  cfg.put("my.key1", 42);
+  cfg.put("my.key2", "my.value2");
+  cfg.store(new File("myCfg.properties"));
+```
+
+## Performance ##
+
+Performance comparison to the _Apache Commons Configuration_ library for a common use-case:
+
+  * Read a properties file (which contains 20 key/value entries) from disk
+  * Access properties with different types (string/bool/int/long/decimal)
+  * Access the same properties over a config-subset
+
+The times are measured as the average of 1 million tries. The test-program can be found under _src/test/java_.
+
+| | **PureJ Cfg** | **Apache Commons Configuration** |
+|:|:--------------|:---------------------------------|
+| Read property file | 90 micros     | 480 micros                       |
+| Access single property | 0.3 micros    | 1.5 micros                       |
+| Access single property on a subset | 0.5 micros    | 2.8 micros                       |
+
