@@ -1,4 +1,5 @@
-#PureJ Cfg
+
+<h1><img src="https://cloud.githubusercontent.com/assets/13910123/9427485/e1fecaf8-4980-11e5-86eb-905b762092b8.png"/> PureJ Cfg</h1>
 
 ##Features
 
