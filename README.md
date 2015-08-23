@@ -7,11 +7,12 @@
   * Automatic substitution (resolve) of expressions of the form ${my.key} inside config values
   * Convenience functionality: Subsets, merge, range-checks
 
-In contrary to the _Apache Commons Configuration_ library which aims for the same goals, this library is extremly small (just 9k), has much better performance (see below) and does not require additional dependencies.
+In contrary to the *Apache Commons Configuration* library which aims for the same goals, this library is extremly small (just 9k), has much better performance (see below) and does not require additional dependencies.
 
 ##Requisites
 
   * Java 1.6+
+
 Maven users just need to add the following dependency:
 
 ```
@@ -31,7 +32,7 @@ Create a _Cfg_ instance from various sources:
   Cfg cfg = new Cfg(System.getenv()); // Load from system environment
 ```
 
-Access type-safe *mandatory* config values (throws a _!CfgException_ if a key or value is missing or if conversion failed):
+Access type-safe *mandatory* config values (throws a *CfgException* if a key or value is missing or if conversion failed):
 ```
   boolean myBool = cfg.getBoolean("my.mandatory.boolean.key");
   int myInt = cfg.getInt("my.mandatory.int.key");
@@ -56,7 +57,7 @@ Change some config values and store to a properties file:
 
 ##Performance
 
-Performance comparison to the _Apache Commons Configuration_ library for a common use-case:
+Performance comparison to the *Apache Commons Configuration* library for a common use-case:
 
   * Read a properties file (which contains 20 key/value entries) from disk
   * Access properties with different types (string/bool/int/long/decimal)
