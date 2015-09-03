@@ -1,3 +1,5 @@
+Version "current"
+ - Moved from google-code to github, changed repository URLs, upgraded parent pom
 
 Version 1.0 (19.1.2014)
-  - Moved from private repo to code.google.com and Maven Central, added licensing
+ - Moved from private repo to code.google.com and Maven Central, added licensing
