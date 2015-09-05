@@ -1,4 +1,8 @@
 Version "current"
+ - Load / store does not throw checked exceptions anymore (wrapped inside a CfgException)
+ - getSubsetName() returns a more readable name (without the . at the end)
+ - toMap() method automatically resolves values if the Cfg instance is a subset, as otherwise value might be not resolvable anymore
+ - new typed methods to get/put string array values
  - Moved from google-code to github, changed repository URLs, upgraded parent pom
 
 Version 1.0 (19.1.2014)

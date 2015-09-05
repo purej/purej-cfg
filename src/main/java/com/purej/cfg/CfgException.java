@@ -16,4 +16,11 @@ public final class CfgException extends RuntimeException {
   public CfgException(String message) {
     super(message);
   }
+
+  /**
+   * Creates a new instance of this class with the specified exception message and cause.
+   */
+  public CfgException(String message, Exception cause) {
+    super(message, cause);
+  }
 }

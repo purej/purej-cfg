@@ -22,8 +22,8 @@ import java.util.Set;
  * This class holds some configuration stored as string key/value pairs, provides typed access and supports automatic substitution
  * of expressions of the form ${lookup.key} inside config values
  * <p/>
- * Typically, this class is used in conjunction with a java properties file. See the {@link CfgAccess} helper methods to load and
- * store a {@link Cfg} from and to a java properties file.
+ * Typically, this class is used in conjunction with a java properties file. See the constructor methods to load a {@link Cfg} from
+ * a java properties file.
  * <p/>
  * <strong>Note that this implementation is not synchronized.</strong> If multiple threads access this config concurrently,
  * and at least one of the threads adds or deletes config keys, it <i>must</i> be synchronized externally!
@@ -33,14 +33,6 @@ import java.util.Set;
 public class Cfg {
   private final Map<String, String> _map;
   private final String _subsetPrefix;
-
-  /**
-   * Creates a new instance with the given state - only for internal usage.
-   */
-  private Cfg(Map<String, String> map, String subsetPrefix) {
-    _map = map;
-    _subsetPrefix = subsetPrefix;
-  }
 
   /**
    * Creates a new instance of this class using an empty key/value map.
@@ -75,9 +67,9 @@ public class Cfg {
    * See the {@link Properties} javadoc for more details.
    *
    * @param resourceOrFile the java properties resource or file
-   * @throws IOException if the file or resource could not be found or an I/O error occurred
+   * @throws CfgException if the file or resource could not be found or an I/O error occurred
    */
-  public Cfg(String resourceOrFile) throws IOException {
+  public Cfg(String resourceOrFile) throws CfgException {
     this(load(resourceOrFile));
   }
 
@@ -87,9 +79,9 @@ public class Cfg {
    * See the {@link Properties} javadoc for more details.
    *
    * @param file the java properties file
-   * @throws IOException if the file could not be found or an I/O error occurred
+   * @throws CfgException if the file could not be found or an I/O error occurred
    */
-  public Cfg(File file) throws IOException {
+  public Cfg(File file) throws CfgException {
     this(load(file));
   }
 
@@ -105,33 +97,64 @@ public class Cfg {
     this(load(stream));
   }
 
-  private static Properties load(String resourceOrFile) throws IOException {
+  /**
+   * Creates a new instance with the given state - only for internal usage.
+   */
+  private Cfg(Map<String, String> map, String subsetPrefix) {
+    this._map = map;
+    this._subsetPrefix = subsetPrefix;
+  }
+
+  private static Properties load(String resourceOrFile) throws CfgException {
     InputStream stream = createInputStream(resourceOrFile);
     try {
       return load(stream);
     }
     finally {
-      stream.close();
+      closeStream(stream);
     }
   }
 
-  private static Properties load(File file) throws IOException {
-    InputStream stream = new FileInputStream(file);
+  private static Properties load(File file) throws CfgException {
+    InputStream stream = createStream(file);
     try {
       return load(stream);
     }
     finally {
-      stream.close();
+      closeStream(stream);
     }
   }
 
-  private static Properties load(InputStream stream) throws IOException {
+  private static Properties load(InputStream stream) throws CfgException {
     Properties properties = new Properties();
-    properties.load(stream);
+    try {
+      properties.load(stream);
+    }
+    catch (IOException e) {
+      throw new CfgException("The property stream could not be loaded!", e);
+    }
     return properties;
   }
 
-  private static InputStream createInputStream(String properties) throws IOException {
+  private static FileInputStream createStream(File file) {
+    try {
+      return new FileInputStream(file);
+    }
+    catch (IOException e) {
+      throw new CfgException("File '" + file + "' could not be opened!", e);
+    }
+  }
+
+  private static void closeStream(InputStream stream) {
+    try {
+      stream.close();
+    }
+    catch (IOException e) {
+      // Ignored...
+    }
+  }
+
+  private static InputStream createInputStream(String properties) throws CfgException {
     // Try to get it as resource from the context class loader (most specific class loader):
     InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(properties);
     if (stream != null) {
@@ -145,9 +168,9 @@ public class Cfg {
     // Try to load it as file:
     File file = new File(properties);
     if (!file.exists()) {
-      throw new IOException("The file or resource '" + properties + "' does not exist!");
+      throw new CfgException("The file or resource '" + properties + "' does not exist!");
     }
-    return new FileInputStream(file);
+    return createStream(file);
   }
 
   /**
@@ -194,11 +217,11 @@ public class Cfg {
   }
 
   /**
-   * Returns the subset-prefix of this config instance.
-   * @return the subset prefix or null if this config is no subset (eg. root)
+   * Returns the name of this cfg subset or null if this cfg instance is a root cfg.
+   * @return the subset (without the last dot) or null if this is no subset
    */
-  public String getSubsetPrefix() {
-    return _subsetPrefix;
+  public String getSubsetName() {
+    return _subsetPrefix != null ? _subsetPrefix.substring(0, _subsetPrefix.length() - 1) : null;
   }
 
   /**
@@ -210,11 +233,11 @@ public class Cfg {
    * Note: The returned subset contains just a reference (and not a copy) of this config's key/value pairs. So modifications to the subset are
    * reflected in this config and the other way round.
    *
-   * @param subsetPrefix the subset-prefix, must match to a dot-separatable part
+   * @param subset the name / prefix of the subset, must match to a dot-separatable part
    * @return the config subset with an underlying reference to this config
    */
-  public Cfg subset(String subsetPrefix) {
-    String sub = subsetPrefix.endsWith(".") ? subsetPrefix : subsetPrefix + ".";
+  public Cfg subset(String subset) {
+    String sub = subset.endsWith(".") ? subset : subset + ".";
     return new Cfg(_map, toKey(sub));
   }
 
@@ -269,10 +292,30 @@ public class Cfg {
   }
 
   /**
+   * Returns whether or not this cfg contains at least one key.
+   */
+  public boolean containsKeys() {
+    return getKeys().size() > 0;
+  }
+
+  /**
+   * Returns whether or not this cfg contains at least one key with an associated value that is not null and not not empty.
+   */
+  public boolean containsValues() {
+    for (String key : getKeys()) {
+      if (containsValue(key)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
    * Returns a newly created map with all key/value pairs of this config instance.
    * If this config instance is a subset, only the entries of the subset are returned.
    * <p/>
-   * Note: Values will NOT be resolved (eg. no substitutions).
+   * Note: If this configuration is a subset, values will automatically be resolved (eg. substituted)
+   * to prevent them from potentially become unresolvable.
    */
   public Map<String, String> toMap() {
     if (_subsetPrefix == null) {
@@ -281,7 +324,7 @@ public class Cfg {
     Map<String, String> result = new HashMap<String, String>();
     for (Map.Entry<String, String> entry : _map.entrySet()) {
       if (entry.getKey().startsWith(_subsetPrefix)) {
-        result.put(entry.getKey().substring(_subsetPrefix.length()), entry.getValue());
+        result.put(entry.getKey().substring(_subsetPrefix.length()), resolve(entry.getKey()));
       }
     }
     return result;
@@ -462,6 +505,45 @@ public class Cfg {
   }
 
   /**
+   * Returns the mandatory config value for the given key as string-array.
+   * <p/>
+   * The elements are splitted by the characters ',', ';' and/or ':'. All splitted values are automatically trimmed.
+   * An empty element after the latest delimiter will be omitted.
+   *
+   * @param key the config key
+   * @return the configured value, never null
+   * @throws CfgException if no value for the given key exists
+   */
+  public String[] getStringArray(String key) {
+    String value = getString(key);
+    return splitAndTrim(value);
+  }
+
+  /**
+   * Returns the optional config value for the given key as string-array.
+   * <p/>
+   * The elements are splitted by the characters ',', ';' and/or ':'. All splitted values are automatically trimmed.
+   * An empty element after the latest delimiter will be omitted.
+   *
+   * @param key the config key
+   * @param defaultValue the default value in case of a missing a config value
+   * @return the configured value or the specified default value
+   */
+  public String[] getStringArray(String key, String[] defaultValue) {
+    String value = getString(key, null);
+    return value == null ? defaultValue : splitAndTrim(value);
+  }
+
+  private static String[] splitAndTrim(String value) {
+    String[] array = value.split("[,;:]");
+    String[] result = new String[array.length];
+    for (int i = 0; i < array.length; i++) {
+      result[i] = array[i] == null ? null : array[i].trim();
+    }
+    return result;
+  }
+
+  /**
    * Sets the key/value pair to this config and overwrites an eventually already existing pair.
    *
    * @param key the key to be set, must not be null
@@ -522,6 +604,33 @@ public class Cfg {
   }
 
   /**
+   * Sets the key/value pair to this config and overwrites an eventually already existing pair.
+   * <p/>
+   * Note: As this arrays values are stored in a char-separated list, the separator-characters
+   * (',', ';' and ':') are not allowed inside values.
+   *
+   * @param key the key to be set, must not be null
+   * @param value the value to be set, might be null
+   */
+  public void put(String key, String[] value) {
+    String s = null;
+    if (value != null) {
+      StringBuilder builder = new StringBuilder();
+      for (String v : value) {
+        if (v.indexOf(',') > 0 || v.indexOf(';') > 0 || v.indexOf(':') > 0) {
+          throw new CfgException("Array value '" + v + "' contains one of the separator chars!");
+        }
+        if (builder.length() > 0) {
+          builder.append(',');
+        }
+        builder.append(v);
+      }
+      s = builder.toString();
+    }
+    _map.put(toKey(key), s);
+  }
+
+  /**
    * Removes the given key from this config.
    *
    * @param key the key to be removed
@@ -536,9 +645,9 @@ public class Cfg {
    * If this config instance is a subset, only the entries of the subset are stored.
    *
    * @param file the file to be written to
-   * @throws IOException if the file could not be written
+   * @throws CfgException if the file could not be written
    */
-  public void store(File file) throws IOException {
+  public void store(File file) throws CfgException {
     if (!file.getParentFile().exists()) {
       file.getParentFile().mkdirs();
     }
@@ -546,12 +655,17 @@ public class Cfg {
     for (Map.Entry<String, String> entry : toMap().entrySet()) {
       properties.put(entry.getKey(), entry.getValue() == null ? "" : entry.getValue());
     }
-    OutputStream stream = new FileOutputStream(file);
     try {
-      properties.store(stream, "Saved at " + new Date());
+      OutputStream stream = new FileOutputStream(file);
+      try {
+        properties.store(stream, "Saved at " + new Date());
+      }
+      finally {
+        stream.close();
+      }
     }
-    finally {
-      stream.close();
+    catch (IOException e) {
+      throw new CfgException("The properties could not be written to file '" + file + "'!", e);
     }
   }
 

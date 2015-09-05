@@ -2,9 +2,8 @@
 package com.purej.cfg;
 
 import java.io.File;
-import java.io.IOException;
-import junit.framework.Assert;
 import org.junit.Test;
+import junit.framework.Assert;
 
 /**
  * Tests the named functionality.
@@ -26,7 +25,7 @@ public class CfgLoadStoreTest {
       cfg = new Cfg(new File("src/test/resources/xxx"));
       Assert.fail();
     }
-    catch (IOException e) {
+    catch (CfgException e) {
       System.out.println("Expected exception: " + e.toString());
     }
   }
@@ -62,7 +61,7 @@ public class CfgLoadStoreTest {
       cfg = new Cfg("src/test/resources/xxx");
       Assert.fail();
     }
-    catch (IOException e) {
+    catch (CfgException e) {
       System.out.println("Expected exception: " + e.toString());
     }
   }

@@ -27,12 +27,15 @@ public class CfgTest {
     cfg.put("a.b.d.empty", "");
     cfg.put("a.b.e", "x3");
     cfg.put("a.c.x", "x4");
+    cfg.put("a.d.e", "");
     System.out.println("Cfg.toString() --> " + cfg.toString());
     System.out.println("Cfg.subset('a.b').toString() --> " + cfg.subset("a.b").toString());
 
     // Test some basic methods:
-    Assert.assertEquals(null, cfg.getSubsetPrefix());
-    Assert.assertEquals(6, cfg.getKeys().size());
+    Assert.assertEquals(null, cfg.getSubsetName());
+    Assert.assertEquals(7, cfg.getKeys().size());
+    Assert.assertEquals(true, cfg.containsKeys());
+    Assert.assertEquals(true, cfg.containsValues());
     Assert.assertEquals(false, cfg.containsKey(""));
     Assert.assertEquals(false, cfg.containsKey("xy"));
     Assert.assertEquals(true, cfg.containsKey("a.b.d.null"));
@@ -45,17 +48,23 @@ public class CfgTest {
     Assert.assertEquals(true, cfg.containsValue("a.b.c"));
 
     // Test subset:
-    Assert.assertEquals(6, cfg.subset("a").getKeys().size());
+    Assert.assertEquals(7, cfg.subset("a").getKeys().size());
     Assert.assertEquals(5, cfg.subset("a.b").getKeys().size());
     Assert.assertEquals(2, cfg.subset("a.b.d").getKeys().size());
     Assert.assertEquals(1, cfg.subset("a.c").getKeys().size());
+    Assert.assertEquals(true, cfg.subset("a.c").containsKeys());
     Assert.assertEquals(0, cfg.subset("blub").getKeys().size());
+    Assert.assertEquals(false, cfg.subset("blub").containsKeys());
+    Assert.assertEquals(false, cfg.subset("blub").containsValues());
+
+    Assert.assertEquals(true, cfg.subset("a.d").containsKeys());
+    Assert.assertEquals(false, cfg.subset("a.d").containsValues());
 
     // Test getting a values on subset:
-    Assert.assertEquals(null, cfg.getSubsetPrefix());
-    Assert.assertEquals("a.b.", cfg.subset("a.b").getSubsetPrefix());
+    Assert.assertEquals(null, cfg.getSubsetName());
+    Assert.assertEquals("a.b", cfg.subset("a.b").getSubsetName());
     Assert.assertEquals("x2", cfg.subset("a.b.").getString("d"));
-    Assert.assertEquals("bla.bli.", cfg.subset("bla").subset("bli").getSubsetPrefix());
+    Assert.assertEquals("bla.bli", cfg.subset("bla").subset("bli").getSubsetName());
     Assert.assertEquals("myDefault", cfg.subset("blub").getString("y", "myDefault"));
   }
 
@@ -154,6 +163,10 @@ public class CfgTest {
     cfg.put("long-value", 12345678901L);
     cfg.put("decimal-value", new BigDecimal("1234.5678"));
     cfg.put("timeunit-value", TimeUnit.HOURS);
+    cfg.put("array-value-null", (String[]) null);
+    cfg.put("array-value-empty", new String[] {});
+    cfg.put("array-value-spaces", new String[] {"  "});
+    cfg.put("array-value", new String[] {"x", "y", " z "});
 
     // Test all type:
     doTestGetTypeValues(cfg);
@@ -176,6 +189,10 @@ public class CfgTest {
     cfg.put("my.sub.long-value", "12345678901");
     cfg.put("my.sub.decimal-value", "1234.5678");
     cfg.put("my.sub.timeunit-value", "HOURS");
+    cfg.put("my.sub.array-value-null", (String[]) null);
+    cfg.put("my.sub.array-value-empty", new String[] {});
+    cfg.put("my.sub.array-value-spaces", new String[] {"  "});
+    cfg.put("my.sub.array-value", new String[] {"x", "y", " z "});
     cfg = cfg.subset("my.sub");
 
     // Test all type:
@@ -193,6 +210,10 @@ public class CfgTest {
     Assert.assertEquals(false, c.containsValue("string-value-empty"));
     Assert.assertEquals(true, c.containsValue("string-value-spaces"));
     Assert.assertEquals(true, c.containsValue("string-value"));
+    Assert.assertEquals(false, c.containsValue("array-value-null"));
+    Assert.assertEquals(false, c.containsValue("array-value-empty"));
+    Assert.assertEquals(true, c.containsValue("array-value-spaces"));
+    Assert.assertEquals(true, c.containsValue("array-value"));
 
     // Test mandatory properties:
     Assert.assertEquals(" abc ", c.getString("string-value"));
@@ -202,6 +223,8 @@ public class CfgTest {
     Assert.assertEquals(12345678901L, c.getLong("long-value"));
     Assert.assertEquals(new BigDecimal("1234.5678"), c.getBigDecimal("decimal-value"));
     Assert.assertEquals(TimeUnit.HOURS, c.getEnum("timeunit-value", TimeUnit.class));
+    Assert.assertArrayEquals(new String[] {"x", "y", "z"}, c.getStringArray("array-value"));
+    Assert.assertArrayEquals(new String[] {""}, c.getStringArray("array-value-spaces"));
 
     // Test optional properties (existing - primitive):
     Assert.assertEquals(true, c.getBoolean("boolean-value", false));
@@ -215,6 +238,7 @@ public class CfgTest {
     Assert.assertEquals(Long.valueOf(12345678901L), c.getLong("long-value", Long.valueOf(5678956789L)));
     Assert.assertEquals(new BigDecimal("1234.5678"), c.getBigDecimal("decimal-value", new BigDecimal("5678.1234")));
     Assert.assertEquals(TimeUnit.HOURS, c.getEnum("timeunit-value", TimeUnit.class, TimeUnit.DAYS));
+    Assert.assertArrayEquals(new String[] {"x", "y", "z"}, c.getStringArray("array-value", new String[] {"1", "2"}));
 
     // Test optional properties (not existing - primitive):
     Assert.assertEquals(false, c.getBoolean("boolean-x", false));
@@ -228,6 +252,8 @@ public class CfgTest {
     Assert.assertEquals(Long.valueOf(5678956789L), c.getLong("long-x", Long.valueOf(5678956789L)));
     Assert.assertEquals(new BigDecimal("5678.1234"), c.getBigDecimal("decimal-x", new BigDecimal("5678.1234")));
     Assert.assertEquals(TimeUnit.DAYS, c.getEnum("timeunit-x", TimeUnit.class, TimeUnit.DAYS));
+    Assert.assertArrayEquals(new String[] {"1", "2"}, c.getStringArray("array-value-null", new String[] {"1", "2"}));
+    Assert.assertArrayEquals(new String[] {"1", "2"}, c.getStringArray("array-value-empty", new String[] {"1", "2"}));
 
     // Test wrong property type:
     try {
