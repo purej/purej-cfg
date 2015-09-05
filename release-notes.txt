@@ -1,4 +1,6 @@
 Version "current"
+
+Version 1.1 (05.09.2015)
  - Load / store does not throw checked exceptions anymore (wrapped inside a CfgException)
  - getSubsetName() returns a more readable name (without the . at the end)
  - toMap() method automatically resolves values if the Cfg instance is a subset, as otherwise value might be not resolvable anymore
