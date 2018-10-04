@@ -1,7 +1,7 @@
 
 <h1><img src="https://cloud.githubusercontent.com/assets/13910123/9427485/e1fecaf8-4980-11e5-86eb-905b762092b8.png"/> PureJ Cfg</h1>
 
-##Features
+## Features
 
   * Checked and type-safe access to configuration key/value pairs
   * Automatic substitution (resolve) of expressions of the form ${my.key} inside config values
@@ -9,7 +9,7 @@
 
 In contrary to the *Apache Commons Configuration* library which aims for the same goals, this library is extremly small (just 9k), has much better performance (see below) and does not require additional dependencies.
 
-##Requisites
+## Requisites
 
   * Java 1.8 or higher
 
@@ -23,7 +23,7 @@ Maven users just need to add the following dependency:
   </dependency>
 ```
 
-##Usage
+## Usage
 
 Create a _Cfg_ instance from various sources:
 ```
@@ -55,7 +55,7 @@ Change some config values and store to a properties file:
   cfg.store(new File("myCfg.properties"));
 ```
 
-##Performance
+## Performance
 
 Performance comparison to the *Apache Commons Configuration* library for a common use-case:
 
