@@ -11,7 +11,7 @@ In contrary to the *Apache Commons Configuration* library which aims for the sam
 
 ##Requisites
 
-  * Java 1.6+
+  * Java 1.8 or higher
 
 Maven users just need to add the following dependency:
 

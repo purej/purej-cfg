@@ -1,5 +1,9 @@
 Version "current"
 
+Version 1.2 (04.10.2018)
+ - Requires jdk 1.8
+ - Added automatic-module-name to manifest for java 9 and higher support
+
 Version 1.1 (05.09.2015)
  - Load / store does not throw checked exceptions anymore (wrapped inside a CfgException)
  - getSubsetName() returns a more readable name (without the . at the end)
