@@ -19,7 +19,7 @@ Maven users just need to add the following dependency:
   <dependency>
     <groupId>com.purej</groupId>
     <artifactId>purej-cfg</artifactId>
-    <version>1.0</version>
+    <version>1.2</version>
   </dependency>
 ```
 
