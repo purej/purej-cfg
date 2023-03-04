@@ -10,7 +10,7 @@
   </parent>
 
   <artifactId>purej-cfg</artifactId>
-  <version>1.3</version>
+  <version>1.4-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>PureJ Cfg</name>
