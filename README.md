@@ -7,11 +7,11 @@
   * Automatic substitution (resolve) of expressions of the form ${my.key} inside config values
   * Convenience functionality: Subsets, merge, range-checks
 
-In contrary to the *Apache Commons Configuration* library which aims for the same goals, this library is extremly small (just 9k), has much better performance (see below) and does not require additional dependencies.
+In contrary to the *Apache Commons Configuration 1 and 2* library which aims for the same goals, this library is extremly small (just 9k), has much better performance (see below) and does not require additional dependencies.
 
 ## Requisites
 
-  * Java 1.8 or higher
+  * Java 1.8 or higher (tested with java 8, 11, 17)
 
 Maven users just need to add the following dependency:
 
@@ -19,7 +19,7 @@ Maven users just need to add the following dependency:
   <dependency>
     <groupId>com.purej</groupId>
     <artifactId>purej-cfg</artifactId>
-    <version>1.2</version>
+    <version>1.3</version>
   </dependency>
 ```
 
@@ -65,9 +65,9 @@ Performance comparison to the *Apache Commons Configuration* library for a commo
 
 The times are measured as the average of 1 million tries. The test-program can be found under _src/test/java_.
 
-|| PureJ Cfg | Apache Commons Configuration |
-|----|----|----|
-|Read property file | 90 micros | 480 micros |
-| Access single property | 0.3 micros | 1.5 micros |
-| Access single property on a subset | 0.5 micros | 2.8 micros |
+|| PureJ Cfg | Apache Commons Configuration | Apache Commons Configuration |
+|----|----|----|----|
+|Read property file | 60 micros | 440 micros | 450 micros |
+| Access single property | 0.03 micros | 0.1 micros | 0.2 micros |
+| Access single property on a subset | 0.06 micros | 0.6 micros | 0.6 micros |
 

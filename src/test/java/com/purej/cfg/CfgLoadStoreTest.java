@@ -2,8 +2,8 @@
 package com.purej.cfg;
 
 import java.io.File;
+import org.junit.Assert;
 import org.junit.Test;
-import junit.framework.Assert;
 
 /**
  * Tests the named functionality.
